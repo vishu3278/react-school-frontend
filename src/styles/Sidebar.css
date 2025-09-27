@@ -1,0 +1,5 @@
+/*.sidebar { @apply bg-gray-900; }*/
+.sidebar figure { @apply flex items-center justify-center; }
+.sidebar ul { @apply p-4 flex flex-col gap-2; }
+.sidebar li { @apply flex items-center gap-2; }
+.sidebar li a { @apply grow; }
