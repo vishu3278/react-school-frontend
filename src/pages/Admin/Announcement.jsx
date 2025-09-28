@@ -61,11 +61,11 @@ const Announcement = () => {
     <section className="bg-teal-200 rounded p-4 my-4">
       <ToastContainer />
       {/*<Sidebar />*/}
-      <div>
-        <h1 className="text-2xl font-semibold mb-2">Announcement</h1>
+      <h1 className="text-2xl font-semibold mb-2">Announcement</h1>
+      <div className="flex gap-5">
         {/* Announcement Form */}
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2">
             <label htmlFor="announcement">Add announcement</label>
             <textarea
               id="announcement"
@@ -75,19 +75,20 @@ const Announcement = () => {
               rows={2}
               cols={50}
             />
-            <button type="submit" className="bg-teal-400 rounded px-4 py-1">Send Announcement</button>
+            <button type="submit" className="bg-teal-400 ">Send Announcement</button>
           </div>
         </form>
-
-        {/* Display Announcements */}
-        <h2 className="text-xl mb-1">Announcements</h2>
-        <ul>
-          {announcements.map((announcement) => (
-            <li key={announcement._id}>
-              <p>{announcement.announcement}</p>
-            </li>
-          ))}
-        </ul>
+        <div>
+          {/* Display Announcements */}
+          <h2 className="text-xl font-semibold mb-1">Announcements</h2>
+          <ul>
+            {announcements.map((announcement) => (
+              <li key={announcement._id}>
+                <p className="py-1">📢 {announcement.announcement}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

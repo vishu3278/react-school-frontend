@@ -16,7 +16,7 @@ import axios from 'axios';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import EventCard from './EventCard';
-const EventCalendar = () => {
+const EventSection = () => {
   const [events, setEvents] = useState([]);
   const [newEvent, setNewEvent] = useState('');
   const [error, setError] = useState(null);
@@ -26,7 +26,7 @@ const EventCalendar = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/v1/events/getall');
-      console.log(response.data.event)
+      // console.log(response.data.event)
       // const evArr = response.data.event.map((e1) => {title: e1.events, date: e1.date, id: e1._id})
       setEvents(response.data.event || []);
     } catch (error) {
@@ -91,8 +91,8 @@ const EventCalendar = () => {
         <div>
           <h2 className="text-xl mb-1">Events</h2>
           <div className="grid grid-cols-3 gap-2">
-            {events.map((event, index) => (
-              <EventCard eventData={event} />
+            {events.map((event) => (
+              <EventCard key={event._id} eventData={event} color="sky" />
             ))}
           </div>
         </div>
@@ -101,4 +101,4 @@ const EventCalendar = () => {
   );
 };
 
-export default EventCalendar;
+export default EventSection;

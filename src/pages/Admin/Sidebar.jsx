@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { BsGraphUp, BsPeople, BsPerson, BsFileText, BsBook, BsGraphDown, BsCalendar, BsGear, BsChatDots, BsCalendarEvent, BsQuestionSquare } from 'react-icons/bs';
-import bg1 from '../../assets/bg1.png'
+import logo from '../../assets/JD-Logo.jpg'
 import '../../styles/Sidebar.css'
 
 /*const SidebarContainer = styled.div`
@@ -88,64 +88,64 @@ const Sidebar = () => {
     };*/
 
     return (
-        <aside className="sidebar bg-slate-200" >
+        <aside className="sidebar bg-gradient-to-b from-white to-slate-200" >
           <figure>
-            <img src={bg1} alt="Logo" />
+            <img src={logo} alt="Logo" className="max-w-64 mx-auto" />
           </figure>
-          <ul>
+          <ul className="sticky top-0">
             <li>
               <div><BsGraphUp /></div>
               <Link to="/admin/dashboard">Dashboard</Link>
             </li>
-              <li>
-                <div><BsPeople /></div>
-                <Link to="/admin/classes">Classes</Link>
-              </li>
-              <li>
-                <div><BsPeople /></div>
-                <Link to="/admin/students">Students</Link>
-              </li>
-              <li>
-                <div><BsPerson /></div>
-                <Link to="/admin/teachers">Teachers</Link>
-              </li>
-              <li>
-                <div><BsFileText /></div>
-                <Link to="/admin/assignments">Assignments</Link>
-              </li>
-              <li>
-                <div><BsBook /></div>
-                <Link to="/admin/exams">Exams</Link>
-              </li>
-              <li>
-                <div><BsGraphDown /></div>
-                <Link to="/admin/performance">Performance</Link>
-              </li>
-              <li>
-                <div><BsCalendar /></div>
-                <Link to="/admin/attendance">Attendance</Link>
-              </li>
-              <li>
-                <div><BsBook /></div>
-                <Link to="/admin/library">Library</Link>
-              </li>
-              <li>
-                <div><BsChatDots /></div>
-                <Link to="/admin/communication">Announcement</Link>
-              </li>
-              <li>
-                <div><BsCalendarEvent /></div>
-                <Link to="/admin/events">Events & Calendar</Link>
-              </li>
-              <li>
-                <div><BsGear /></div>
-                <Link to="/admin/settings">Settings & Profile</Link>
-              </li>
-            </ul>
+            <li>
+              <div><BsPeople /></div>
+              <Link to="/admin/classes">Classes</Link>
+            </li>
+            <li>
+              <div><BsPeople /></div>
+              <Link to="/admin/students">Students</Link>
+            </li>
+            <li>
+              <div><BsPerson /></div>
+              <Link to="/admin/teachers">Teachers</Link>
+            </li>
+            <li>
+              <div><BsFileText /></div>
+              <Link to="/admin/assignments">Assignments</Link>
+            </li>
+            <li>
+              <div><BsBook /></div>
+              <Link to="/admin/exams">Exams</Link>
+            </li>
+            <li>
+              <div><BsGraphDown /></div>
+              <Link to="/admin/performance">Performance</Link>
+            </li>
+            <li>
+              <div><BsCalendar /></div>
+              <Link to="/admin/attendance">Attendance</Link>
+            </li>
+            <li>
+              <div><BsBook /></div>
+              <Link to="/admin/library">Library</Link>
+            </li>
+            <li>
+              <div><BsChatDots /></div>
+              <Link to="/admin/communication">Announcement</Link>
+            </li>
+            <li>
+              <div><BsCalendarEvent /></div>
+              <Link to="/admin/events">Events & Calendar</Link>
+            </li>
+            <li>
+              <div><BsGear /></div>
+              <Link to="/admin/settings">Settings & Profile</Link>
+            </li>
+          </ul>
             {/*<ToggleButton onClick={toggleSidebar}>
               <ToggleIcon isOpen={isOpen}>▲</ToggleIcon>
             </ToggleButton>*/}
-    </aside>
+        </aside>
     );
 };
 

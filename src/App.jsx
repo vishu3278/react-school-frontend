@@ -33,7 +33,7 @@ import ClassSection from '../src/pages/Teachers/Classes';
 import StudentSection from '../src/pages/Teachers/Students';
 import TeacherSection from '../src/pages/Teachers/Teachers';
 import CheckPerformanceSection from '../src/pages/Teachers/Performance';
-import EventSection from '../src/pages/Teachers/Events';
+import EventSection from '../src/pages/Teachers/EventSection';
 import TeacherProfileSection from '../src/pages/Teachers/Profile';
 import CheckAnnouncementSection from '../src/pages/Teachers/Announcement';
 import AssignmentSection from '../src/pages/Teachers/Assignments';

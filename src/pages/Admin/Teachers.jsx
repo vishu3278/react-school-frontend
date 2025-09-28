@@ -72,22 +72,22 @@ const Teachers = () => {
             />
             <button type="submit" className="px-4 py-1 bg-green-400 rounded">Add Teacher</button>
           </form>
-          <table className="border-separate border-spacing-x-4 border border-green-400 ">
+          <table className="border-collapse " cellPadding="5">
             <thead>
               <tr>
-                <th>#</th>
-                <th>name</th>
-                <th>email</th>
-                <th>subject</th>
+                <th className="border border-green-400">#</th>
+                <th className="border border-green-400">name</th>
+                <th className="border border-green-400">email</th>
+                <th className="border border-green-400">subject</th>
               </tr>
             </thead>
             <tbody>
               {teachers.map((teacher, index) => (
                 <tr key={index}>
-                  <td>{index+1}</td>
-                  <td>{teacher.name}</td>
-                  <td>{teacher.email}</td>
-                  <td>{teacher.subject}</td>
+                  <td className="border border-green-400">{index+1}</td>
+                  <td className="border border-green-400">{teacher.name}</td>
+                  <td className="border border-green-400">{teacher.email}</td>
+                  <td className="border border-green-400">{teacher.subject}</td>
                 </tr>
               ))}
             </tbody>

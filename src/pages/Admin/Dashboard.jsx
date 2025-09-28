@@ -60,7 +60,9 @@ const AdminDashboard = () => {
 
   return (
     <section className="grid wrapper">
-      <header className="header"></header>
+      <header className="header bg-blue-900 text-center">
+        <h2 className="text-2xl text-white leading-snug p-1">School Management System</h2>
+      </header>
       <Sidebar />
       <main className="main" >
         <div className="px-4">
@@ -88,7 +90,9 @@ const AdminDashboard = () => {
           <Announcement announcements={announcements} />
         </div>
       </main>
-      <footer className="footer"></footer>
+      <footer className="footer text-center text-sm bg-gray-500 text-gray-200 p-1">
+        <p>Copyright ©️ 2025</p>
+      </footer>
     </section>
   );
 };
