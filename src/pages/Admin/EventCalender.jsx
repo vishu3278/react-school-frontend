@@ -26,7 +26,7 @@ const EventCalendar = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/v1/events/getall');
-      console.log(response.data.event)
+      // console.log(response.data.event)
       // const evArr = response.data.event.map((e1) => {title: e1.events, date: e1.date, id: e1._id})
       setEvents(response.data.event || []);
     } catch (error) {

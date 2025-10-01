@@ -36,7 +36,7 @@ const Students = () => {
   const fetchClasses = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/v1/class/getall');
-      console.log(response.data)
+      // console.log(response.data)
       // const clsArr = response.data.classes.map((item) => item.grade)
       // console.log(clsArr)
       if (response.data && Array.isArray(response.data.classes)) {
@@ -69,7 +69,7 @@ const Students = () => {
       <div>
         <div>
           <h2 className="text-2xl mb-2">Students</h2>
-          <form className="inline-flex gap-4 my-2" onSubmit={handleAddStudent}>
+          <form className="inline-flex gap-4 my-2" >
             <input
               type="text"
               placeholder="Enter student name"
@@ -95,11 +95,11 @@ const Students = () => {
                 <option key={grade._id}>{grade.grade}</option>
               ))}
             </select>
-            <button type="submit" className="bg-pink-400 ">Add Student</button>
+            <button type="button" className="bg-pink-400 " onClick={handleAddStudent}>Add Student</button>
           </form>
           <ul className="list-decimal list-inside">
             {students.map((student) => (
-              <li key={student.id}>{student.name} - {student.registrationNumber} - {student.grade}</li>
+              <li key={student._id}>{student?.name} - {student?.registrationNumber} - {student?.grade}</li>
             ))}
           </ul>
         </div>

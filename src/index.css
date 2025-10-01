@@ -21,6 +21,8 @@ body {
 @layer components {
   .button { @apply px-4 py-1 rounded hover:bg-opacity-80; }
   .card { @apply p-4 rounded border ; }
+  .checkbox { @apply inline-block py-1 px-3 rounded-full bg-yellow-200; }
+  .checkbox:has(:checked) { @apply bg-teal-200; }
 }
 /*:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
