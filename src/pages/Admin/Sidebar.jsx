@@ -103,6 +103,10 @@ const Sidebar = () => {
             </li>
             <li>
               <div><BsPeople /></div>
+              <Link to="/admin/subjects">Subjects</Link>
+            </li>
+            <li>
+              <div><BsPeople /></div>
               <Link to="/admin/students">Students</Link>
             </li>
             <li>

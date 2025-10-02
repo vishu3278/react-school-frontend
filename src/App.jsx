@@ -10,6 +10,7 @@ import StudentDashboard from '../src/pages/Students/Dashboard';
 import TeacherDashboard from '../src/pages/Teachers/Dashboard';
 
 import Classes from '../src/pages/Admin/Classes';
+import Subjects from '../src/pages/Admin/Subjects';
 import Exam from '../src/pages/Admin/Exam';
 import Attendance from '../src/pages/Admin/Attendance';
 import Performance from '../src/pages/Admin/Performance';
@@ -62,6 +63,7 @@ const App = () => {
         {/* Admin section here */}
 
         <Route exact path="/admin/classes" element={<Classes />} />
+        <Route exact path="/admin/subjects" element={<Subjects />} />
         <Route exact path="/admin/exams" element={<Exam />} />
         <Route exact path="/admin/attendance" element={<Attendance />} />
         <Route exact path="/admin/performance" element={<Performance />} />

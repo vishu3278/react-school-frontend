@@ -2,18 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import axios from 'axios';
-/*import {
-  ExamContainer,
-  SidebarContainer,
-  Content,
-  ExamHeader,
-  ExamForm,
-  FormLabel,
-  FormInput,
-  AddButton,
-} from '../../styles/ExamStyles';*/
 
 const Exam = () => {
+  const [student, setStudent] = useState({});
+  const [students, setStudents] = useState([]);
   const [examData, setExamData] = useState([]);
   const [name, setName] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -21,8 +13,24 @@ const Exam = () => {
   const [marks, setMarks] = useState('');
 
   useEffect(() => {
+    fetchStudents()
     fetchExams();
   }, []);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/v1/students/getall');
+      setStudents(response.data.students);
+      // initializeAttendanceData(response.data.students);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
+  };
+
+  const handleChange = (event) => {
+    const id = event.target.value
+    setStudent(students.filter(std => std._id === id)[0])
+  }
 
   const fetchExams = async () => {
     try {
@@ -66,43 +74,53 @@ const Exam = () => {
   };
 
   return (
-    <ExamContainer>
-      <SidebarContainer>
+    <section className="flex bg-teal-50 rounded">
+      {/*<div className="" style={{flex: 0 0 250px;}}>*/}
         <Sidebar />
-      </SidebarContainer>
-      <Content>
-        <ExamHeader>Exam Details</ExamHeader>
-        <ExamForm onSubmit={handleAddExam}>
-          <FormLabel>Name:</FormLabel>
-          <FormInput
+      {/*</div>*/}
+      <div className="p-4">
+        <h2 className="text-2xl mb-2">Exam Details</h2>
+        <div className="flex gap-4">
+          <select onChange={handleChange}>
+            {students.map((std, ind) => (
+              <option key={ind} value={std._id}>{std.name} - {std.grade}</option>
+            ))}
+          </select>
+          <output>
+            {student.registrationNumber} - {student.name} - {student.grade}
+          </output>
+        </div>
+        {/*<form className="flex flex-col" onSubmit={handleAddExam}>
+          <label className="mt-2">Name:</label>
+          <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
-          <FormLabel>Registration Number:</FormLabel>
-          <FormInput
+          <label className="mt-2">Registration Number:</label>
+          <input
             type="text"
             value={registrationNumber}
             onChange={(e) => setRegistrationNumber(e.target.value)}
             required
           />
-          <FormLabel>Class:</FormLabel>
-          <FormInput
+          <label className="mt-2">Class:</label>
+          <input
             type="text"
             value={className}
             onChange={(e) => setClassName(e.target.value)}
             required
           />
-          <FormLabel>Marks:</FormLabel>
-          <FormInput
+          <label className="mt-2">Marks:</label>
+          <input
             type="number"
             value={marks}
             onChange={(e) => setMarks(e.target.value)}
             required
           />
-          <AddButton type="submit">Add Exam</AddButton>
-        </ExamForm>
+          <button type="submit" className="bg-teal-200 mt-2">Add Exam</button>
+        </form>*/}
         <h2>Total Marks: {calculateTotalMarks()}</h2>
         <h3>Exam Details:</h3>
         <ul>
@@ -112,8 +130,8 @@ const Exam = () => {
             </li>
           ))}
         </ul>
-      </Content>
-    </ExamContainer>
+      </div>
+    </section>
   );
 };
 
