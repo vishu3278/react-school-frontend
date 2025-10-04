@@ -58,11 +58,11 @@ const Announcement = () => {
   };
 
   return (
-    <section className="bg-teal-200 rounded p-4 my-4">
+    <section className="bg-teal-100 rounded my-4">
       <ToastContainer />
       {/*<Sidebar />*/}
-      <h1 className="text-2xl font-semibold mb-2">Announcement</h1>
-      <div className="flex gap-5">
+      <h1 className="box-title bg-teal-200">Announcement</h1>
+      <div className="flex gap-5 p-4">
         {/* Announcement Form */}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
@@ -75,7 +75,7 @@ const Announcement = () => {
               rows={2}
               cols={50}
             />
-            <button type="submit" className="bg-teal-400 ">Send Announcement</button>
+            <button type="submit" className="bg-teal-300 ">Send Announcement</button>
           </div>
         </form>
         <div>

@@ -57,8 +57,8 @@ const Library = () => {
   return (
     <section className="bg-orange-100">
       {/*<Sidebar />*/}
+        <h2 className="box-title bg-orange-200">Library Management</h2>
       <div className="p-4">
-        <h2 className="text-2xl mb-2">Library Management</h2>
         <h3 className="text-lg mb-1">Add New Book</h3>
         <form className="inline-flex gap-2"
           onSubmit={(e) => {
@@ -80,7 +80,7 @@ const Library = () => {
             {/*<label htmlFor="author">Author:</label>*/}
             <input type="text" id="author" placeholder="Author | Publisher" required />
           </div>
-          <button type="submit" className="bg-orange-400">Add Book</button>
+          <button type="submit" className="bg-orange-300">Add Book</button>
         </form>
 
         <h2 className="text-lg mt-4 mb-1">Books</h2>

@@ -64,9 +64,9 @@ const EventCalendar = () => {
   };
 
   return (
-    <section className="bg-sky-200 rounded shadow my-4">
+    <section className="bg-sky-100 rounded shadow my-4">
       {/*<Sidebar />*/}
-        <h1 className="bg-sky-300 text-2xl text-sky-800 font-semibold p-4 mb-2">Events & Calendar</h1>
+        <h2 className="bg-sky-200 text-sky-800 box-title">Events & Calendar</h2>
         {/*<div>Current Time: {new Date().toLocaleString()}</div>*/}
       <div className="flex p-4">
         <div className="w-4/6">
@@ -84,7 +84,7 @@ const EventCalendar = () => {
               onChange={(e) => setNewEvent(e.target.value)}
               placeholder="Event title"
             />
-            <button type="submit" className="bg-sky-400 ">Add Event</button>
+            <button type="submit" className="bg-sky-300 ml-2">Add Event</button>
             {error && <p>{error}</p>}
           </form>
         </div>
@@ -92,7 +92,7 @@ const EventCalendar = () => {
           <h2 className="text-xl mb-1">Events</h2>
           <div className="grid grid-cols-3 gap-2">
             {events.map((event, index) => (
-              <EventCard eventData={event} />
+              <EventCard eventData={event} color="orange" />
             ))}
           </div>
         </div>

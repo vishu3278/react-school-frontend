@@ -64,11 +64,11 @@ const Students = () => {
   };
 
   return (
-    <section className="bg-pink-200 rounded shadow p-4 my-4">
+    <section className="bg-pink-100 rounded shadow my-4">
       {/*<Sidebar />*/}
       <div>
-        <div>
-          <h2 className="text-2xl mb-2">Students</h2>
+          <h2 className="box-title bg-pink-200">Students</h2>
+        <div className="p-4">
           <form className="inline-flex gap-4 my-2" >
             <input
               type="text"
@@ -95,7 +95,7 @@ const Students = () => {
                 <option key={grade._id}>{grade.grade}</option>
               ))}
             </select>
-            <button type="button" className="bg-pink-400 " onClick={handleAddStudent}>Add Student</button>
+            <button type="button" className="bg-pink-300 " onClick={handleAddStudent}>Add Student</button>
           </form>
           <ul className="list-decimal list-inside">
             {students.map((student) => (

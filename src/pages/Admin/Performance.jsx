@@ -25,11 +25,11 @@ const Performance = () => {
   ];
 
   return (
-    <section className="bg-indigo-200 shadow rounded p-4 my-4">
+    <section className="bg-indigo-100 shadow rounded my-4">
       {/*<Sidebar /> */}
       
-          <h2 className="text-2xl mb-2">School Performance</h2>
-          <div className="flex justify-between">
+          <h2 className="box-title bg-indigo-200">School Performance</h2>
+          <div className="flex justify-between p-4">
             
             <div>
               <p>Average Score: {schoolPerformanceData.averageScore}</p>

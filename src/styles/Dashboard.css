@@ -1,4 +1,4 @@
-.wrapper { grid-template-areas: "header header header" "sidebar main main" "footer footer footer"; grid-template-columns: max(15rem, 25%) 1fr 1fr; }
+.wrapper { grid-template-areas: "header header header" "sidebar main main" "footer footer footer"; grid-template-columns: max(15rem, 20%) 1fr 1fr; }
 .header { grid-area: header; }
 .sidebar { grid-area: sidebar; }
 .main { grid-area: main; }

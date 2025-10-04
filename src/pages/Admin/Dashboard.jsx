@@ -66,31 +66,31 @@ const AdminDashboard = () => {
       <Sidebar />
       <main className="main" >
         <div className="px-4">
-          <section className="shadow my-4 bg-blue-200 rounded p-4">
-            <h2 className="text-2xl mb-2">Overview</h2>
-            <div className="flex justify-between">
+          <section className="shadow my-4 bg-blue-100 rounded ">
+            <h2 className="box-title bg-blue-200">Overview</h2>
+            <div className="flex justify-between p-4">
               <div>
-                <h4>Total Students</h4>
-                <div>500</div>
+                <h4 className="font-medium">Total Students</h4>
+                <div className="rounded-tr-3xl rounded-bl-3xl bg-gradient-to-br from-blue-200 to-blue-300 text-4xl text-center py-4 font-semibold">500</div>
               </div>
               <div>
-                <h4>Total Teachers</h4>
-                <div>50</div>
+                <h4 className="font-medium">Total Teachers</h4>
+                <div className="rounded-tr-3xl rounded-bl-3xl bg-gradient-to-br from-blue-200 to-blue-300 text-4xl text-center py-4 font-semibold">10</div>
               </div>
               <div>
-                <h4>Total Classes</h4>
-                <div>50</div>
+                <h4 className="font-medium">Total Classes</h4>
+                <div className="rounded-tr-3xl rounded-bl-3xl bg-gradient-to-br from-blue-200 to-blue-300 text-4xl text-center py-4 font-semibold">8</div>
               </div>
             </div>
           </section>
 
+          <Performance studentPerformance={studentPerformance} />
           <EventCalendar events={events} />
           
-          <Performance studentPerformance={studentPerformance} />
           <Announcement announcements={announcements} />
         </div>
       </main>
-      <footer className="footer text-center text-sm bg-gray-500 text-gray-200 p-1">
+      <footer className="footer text-center text-sm bg-gray-300 text-gray-500 p-1">
         <p>Copyright ©️ 2025</p>
       </footer>
     </section>

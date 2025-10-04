@@ -46,11 +46,11 @@ const Teachers = () => {
   };
 
   return (
-    <section className="bg-green-200 rounded shadow p-4 my-4">
+    <section className="bg-green-100 rounded shadow my-4">
       {/*<Sidebar />*/}
       <div>
+          <h2 className="box-title bg-green-200">Teachers</h2>
         <div className="p-4">
-          <h2 className="text-2xl mb-2">Teachers</h2>
           <form onSubmit={handleAddTeacher} className="inline-flex gap-4 my-2">
             <input
               type="text"
@@ -70,15 +70,15 @@ const Teachers = () => {
               value={newTeacher.subject}
               onChange={(e) => setNewTeacher({ ...newTeacher, subject: e.target.value })}
             />
-            <button type="submit" className="px-4 py-1 bg-green-400 rounded">Add Teacher</button>
+            <button type="submit" className="bg-green-300 ">Add Teacher</button>
           </form>
-          <table className="border-collapse " cellPadding="5">
+          <table className="border-collapse border-spacing-x-2" cellPadding="5">
             <thead>
               <tr>
                 <th className="border border-green-400">#</th>
-                <th className="border border-green-400">name</th>
-                <th className="border border-green-400">email</th>
-                <th className="border border-green-400">subject</th>
+                <th className="border border-green-400">Name</th>
+                <th className="border border-green-400">Email</th>
+                <th className="border border-green-400">Subject</th>
               </tr>
             </thead>
             <tbody>
