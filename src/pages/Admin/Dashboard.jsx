@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import EventCalendar from './EventCalender';
 import Announcement from './Announcement';
 import Performance from './Performance';
+import Quiz from '../../components/Quiz';
 import axios from 'axios';
 /*import {
   AdminDashboardContainer,
@@ -66,6 +67,7 @@ const AdminDashboard = () => {
       <Sidebar />
       <main className="main" >
         <div className="px-4">
+          <Quiz />
           <section className="shadow my-4 bg-blue-100 rounded ">
             <h2 className="box-title bg-blue-200">Overview</h2>
             <div className="flex justify-between p-4">
