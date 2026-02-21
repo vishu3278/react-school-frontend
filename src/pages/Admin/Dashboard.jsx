@@ -1,99 +1,106 @@
 // AdminDashboard.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './Sidebar';
-import EventCalendar from './EventCalender';
+import EventCalendar from './EventCalendar';
 import Announcement from './Announcement';
 import Performance from './Performance';
 import Quiz from '../../components/Quiz';
-import axios from 'axios';
-/*import {
-  AdminDashboardContainer,
-  Content,
-  TopContent,
-  BottomContent,
-  Section,
-  SectionTitle,
-  CardContainer,
-  Card,
-  CardTitle,
-  CardContent,
-} from '../../styles/DashboardStyles';*/
-import '../../styles/Dashboard.css'
+import StatCard from '../../components/StatCard';
+import { fetchEvents, fetchAnnouncements, fetchPerformance } from '../../services/api';
+import '../../styles/Dashboard.css';
 
 const AdminDashboard = () => {
-  // const [isOpen, setIsOpen] = useState(true);
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [studentPerformance, setStudentPerformance] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  /*useEffect(() => {
-    fetchEvents();
-    fetchAnnouncements();
-    fetchStudentPerformance();
-  }, []);*/
-
-  const fetchEvents = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/v1/events/getall');
-      setEvents(response.data.events || []);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
-  };
+      setLoading(true);
+      setError(null);
 
-  const fetchAnnouncements = async () => {
-    try {
-      const response = await axios.get('http://localhost:4000/api/v1/announcements/getall');
-      setAnnouncements(response.data.announcements || []);
-    } catch (error) {
-      console.error('Error fetching announcements:', error);
-    }
-  };
+      const [eventsData, announcementsData, performanceData] = await Promise.all([
+        fetchEvents(),
+        fetchAnnouncements(),
+        fetchPerformance(),
+      ]);
 
-  const fetchStudentPerformance = async () => {
-    try {
-      const response = await axios.get('http://localhost:4000/api/v1/performance/getall');
-      setStudentPerformance(response.data.performance || []);
-    } catch (error) {
-      console.error('Error fetching student performance:', error);
+      setEvents(eventsData);
+      setAnnouncements(announcementsData);
+      setStudentPerformance(performanceData);
+    } catch (err) {
+      console.error('Error loading dashboard data:', err);
+      setError('Failed to load dashboard data. Please try again later.');
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-xl font-semibold text-blue-600 animate-pulse">Loading Dashboard...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+        <div className="text-red-500 text-lg mb-4">{error}</div>
+        <button
+          onClick={loadDashboardData}
+          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <section className="grid wrapper">
-      <header className="header bg-blue-900 text-center">
-        <h2 className="text-2xl text-white leading-snug p-1">School Management System</h2>
+    <section className="grid wrapper bg-gray-50 min-h-screen">
+      <header className="header bg-blue-900 shadow-md">
+        <h2 className="text-2xl text-white font-bold text-center py-3">School Management System</h2>
       </header>
+
       <Sidebar />
-      <main className="main" >
-        <div className="px-4">
+
+      <main className="main p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
           <Quiz />
-          <section className="shadow my-4 bg-blue-100 rounded ">
-            <h2 className="box-title bg-blue-200">Overview</h2>
-            <div className="flex justify-between p-4">
-              <div>
-                <h4 className="font-medium">Total Students</h4>
-                <div className="rounded-tr-3xl rounded-bl-3xl bg-gradient-to-br from-blue-200 to-blue-300 text-4xl text-center py-4 font-semibold">500</div>
-              </div>
-              <div>
-                <h4 className="font-medium">Total Teachers</h4>
-                <div className="rounded-tr-3xl rounded-bl-3xl bg-gradient-to-br from-blue-200 to-blue-300 text-4xl text-center py-4 font-semibold">10</div>
-              </div>
-              <div>
-                <h4 className="font-medium">Total Classes</h4>
-                <div className="rounded-tr-3xl rounded-bl-3xl bg-gradient-to-br from-blue-200 to-blue-300 text-4xl text-center py-4 font-semibold">8</div>
-              </div>
+
+          <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+              <span className="w-2 h-8 bg-blue-600 rounded-full mr-3"></span>
+              Overview
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <StatCard title="Total Students" value="500" />
+              <StatCard title="Total Teachers" value="10" />
+              <StatCard title="Total Classes" value="8" />
             </div>
           </section>
 
-          <Performance studentPerformance={studentPerformance} />
-          <EventCalendar events={events} />
-          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Performance studentPerformance={studentPerformance} />
+            <EventCalendar events={events} />
+          </div>
+
           <Announcement announcements={announcements} />
         </div>
       </main>
-      <footer className="footer text-center text-sm bg-gray-300 text-gray-500 p-1">
-        <p>Copyright ©️ 2025</p>
+
+      <footer className="footer bg-white border-t border-gray-200 py-4 mt-8">
+        <p className="text-center text-gray-500 text-sm">
+          &copy; {new Date().getFullYear()} School Management System. All rights reserved.
+        </p>
       </footer>
     </section>
   );

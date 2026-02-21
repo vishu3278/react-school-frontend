@@ -18,7 +18,7 @@ import Teachers from '../src/pages/Admin/Teachers';
 import Students from '../src/pages/Admin/Students';
 import Assignments from '../src/pages/Admin/Assignments';
 import Library from '../src/pages/Admin/Library';
-import EventCalender from '../src/pages/Admin/EventCalender';
+import EventCalendar from '../src/pages/Admin/EventCalendar';
 import SettingsProfile from '../src/pages/Admin/SettingsProfile';
 import Announcement from '../src/pages/Admin/Announcement';
 
@@ -41,7 +41,7 @@ import AssignmentSection from '../src/pages/Teachers/Assignments';
 import CheckAttendanceSection from '../src/pages/Teachers/Attendance';
 import CheckExamSection from '../src/pages/Teachers/Exams';
 
-const App = () => { 
+const App = () => {
   return (
     <Router>
       <Routes>
@@ -57,7 +57,7 @@ const App = () => {
         {/* All the dashboard routes */}
 
         <Route exact path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />        
+        <Route exact path="/teacher/dashboard" element={<TeacherDashboard />} />
         <Route exact path="/student/dashboard" element={<StudentDashboard />} />
 
         {/* Admin section here */}
@@ -72,7 +72,7 @@ const App = () => {
         <Route exact path="/admin/assignments" element={<Assignments />} />
         <Route exact path="/admin/library" element={<Library />} />
         <Route exact path="/admin/communication" element={<Announcement />} />
-        <Route exact path="/admin/events" element={<EventCalender />} />
+        <Route exact path="/admin/events" element={<EventCalendar />} />
         <Route exact path="/admin/settings" element={<SettingsProfile />} />
 
         {/* Students sections here  */}
@@ -82,7 +82,7 @@ const App = () => {
         <Route exact path="/student/performance" element={<PerformanceSection />} />
         <Route exact path="/student/attendance" element={<AttendanceSection />} />
         <Route exact path="/student/library" element={<LibrarySection />} />
-        <Route exact path="/student/communication" element={<AnnouncementSection/>} />
+        <Route exact path="/student/communication" element={<AnnouncementSection />} />
         <Route exact path="/student/settings" element={<ProfileSection />} />
 
         {/* Teachers sections here */}
@@ -95,7 +95,7 @@ const App = () => {
         <Route exact path="/teacher/attendance" element={<CheckAttendanceSection />} />
         <Route exact path="/teacher/communication" element={<CheckAnnouncementSection />} />
         <Route exact path="/teacher/events" element={<EventSection />} />
-        <Route exact path="/teacher/settings" element={<TeacherProfileSection/>} />
+        <Route exact path="/teacher/settings" element={<TeacherProfileSection />} />
 
       </Routes>
     </Router>
