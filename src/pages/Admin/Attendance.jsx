@@ -1,19 +1,7 @@
 // Attendance.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './Sidebar';
 import axios from 'axios';
-/*import {
-  AttendanceContainer,
-  Content,
-  AttendanceContent,
-  AttendanceHeader,
-  AttendanceList,
-  AttendanceItem,
-  StudentName,
-  CheckboxLabel,
-  Divider,
-  SubmitButton,
-} from '../../styles/AttendanceStyles';*/
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -21,129 +9,203 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Attendance = () => {
   const [students, setStudents] = useState([]);
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [value, onChange] = useState(new Date());
+  const [attendanceData, setAttendanceData] = useState({});
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Restrict date to today and past
+  const maxDate = new Date();
+
+  const fetchAttendanceForDate = useCallback(async (date, studentList) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:4000/api/v1/attendance/getall?date=${date.toISOString()}`);
+      const records = response.data.attendanceRecords;
+
+      const newAttendanceData = {};
+      studentList.forEach(student => {
+        const existingRecord = records.find(r => r.student._id === student._id);
+        newAttendanceData[student._id] = existingRecord ? existingRecord.status : 'Present'; // Default to Present
+      });
+
+      setAttendanceData(newAttendanceData);
+    } catch (error) {
+      console.error("Error fetching attendance records", error);
+      toast.error("Error loading attendance data");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchStudents = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('http://localhost:4000/api/v1/students/getall');
+      const studentList = response.data.students;
+      setStudents(studentList);
+      await fetchAttendanceForDate(selectedDate, studentList);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      toast.error("Error fetching students");
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedDate, fetchAttendanceForDate]);
 
   useEffect(() => {
     fetchStudents();
-  }, [value]);
+  }, [fetchStudents]);
 
-  const fetchStudents = async () => {
-    try {
-      const response = await axios.get('http://localhost:4000/api/v1/students/getall');
-      setStudents(response.data.students);
-      initializeAttendanceData(response.data.students);
-    } catch (error) {
-      console.error('Error fetching students:', error);
-    }
+  const handleStatusChange = (studentId, status) => {
+    setAttendanceData(prev => ({
+      ...prev,
+      [studentId]: status
+    }));
   };
 
-  /*const initializeAttendanceData = (students) => {
-    const initialAttendanceData = students.map((student) => ({
-      id: student._id,
-      // reg: student.registrationNumber,
-      name: student.name,
-      grade: student.grade,
-      status: 'Present', // Default to 'Present'
-    }));
-    setAttendanceData(initialAttendanceData);
-  };*/
-
-  const initializeAttendanceData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/api/v1/attendance/getall?date=${value}`)
-      if(response.data.attendanceRecords.length === 0) {
-        toast.error('No attendance data found for this date');
-        return
-      }
-      setAttendanceData(response.data.attendanceRecords.map((a) => {
-        return {status: a.status, ...a.student}
-      }));
-    } catch (error) {
-      console.error("Error fetching attendanceRecords", error)
-    }
-  }
-
-  const handleStatusChange = (id, status) => {
-    const updatedData = attendanceData.map((student) => {
-      if (student.id === id) {
-        return { ...student, status };
-      }
-      return student;
+  const handleMarkAllPresent = () => {
+    const updatedData = { ...attendanceData };
+    students.forEach(student => {
+      updatedData[student._id] = 'Present';
     });
     setAttendanceData(updatedData);
+    toast.info("All students marked as Present");
   };
 
   const handleSubmit = async () => {
     try {
-      // Send attendance data to the database
-      const formattedData = attendanceData.map(({ id, name, status }) => ({ student: id, name, status, date: value }));
+      setSubmitting(true);
+      const formattedData = Object.entries(attendanceData).map(([studentId, status]) => ({
+        student: studentId,
+        status,
+        date: selectedDate
+      }));
+
       const response = await axios.post('http://localhost:4000/api/v1/attendance', { attendanceData: formattedData });
-      console.log('Attendance data submitted:', response.data);
+      toast.success(response.data.message || 'Attendance updated successfully!');
     } catch (error) {
       console.error('Error submitting attendance data:', error);
+      toast.error(error.response?.data?.message || 'Error submitting attendance');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <section className="bg-yellow-100 rounded flex">
-      <ToastContainer />
-      {/*<Sidebar />*/}
-      <div className="grow">
-        <div className="p-4">
-          <h2 className="text-2xl mb-2 font-semibold">Attendance </h2>
-          <div className="min-h-32 mb-4 flex gap-10">
-            <Calendar onChange={onChange} value={value} maxDate={new Date()}/>
-            <p>{value.toDateString()}</p>
-          </div>
-          <div className="grid grid-cols-5">
-            {students.map((student, index) => (
-              <React.Fragment key={student._id}>
-                  <div>{student.name}</div>
-                  <div>{student.grade}</div>
-                  <div>
-                    <label className="checkbox text-green-600">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={attendanceData[index]?.status === 'Present'}
-                        onChange={() => handleStatusChange(student._id, 'Present')}
-                      />
-                      Present
-                    </label>
-                  </div>
+    <section className="flex bg-gray-50 min-h-screen">
+      <ToastContainer position="top-right" autoClose={3000} />
+      <Sidebar />
+      <main className="flex-1 p-8 overflow-y-auto">
+        <div className="max-w-8xl mx-auto space-y-8">
+          <header className="flex justify-between items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-800">Attendance Management</h2>
+              <p className="text-gray-500 mt-1">Mark and track student attendance</p>
+            </div>
+            <div className="flex gap-4">
+              <button
+                onClick={handleMarkAllPresent}
+                className="px-4 py-2 bg-indigo-50 text-indigo-700 font-semibold rounded-lg hover:bg-indigo-100 transition-colors border border-indigo-200"
+              >
+                Mark All Present
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting || loading}
+                className={`px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg shadow-md transition-all ${submitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-indigo-700 hover:shadow-lg active:scale-95'}`}
+              >
+                {submitting ? 'Saving...' : 'Submit Attendance'}
+              </button>
+            </div>
+          </header>
 
-                  <div>
-                    <label className="checkbox text-pink-800">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={attendanceData[index]?.status === 'Absent'}
-                        onChange={() => handleStatusChange(student._id, 'Absent')}
-                      />
-                      Absent
-                    </label>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <aside className="lg:col-span-1 space-y-6">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold mb-4 text-gray-700">Select Date</h3>
+                <Calendar
+                  onChange={setSelectedDate}
+                  value={selectedDate}
+                  maxDate={maxDate}
+                  className="w-full border-none rounded-xl"
+                />
+                <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-blue-800 font-medium">Selected: {selectedDate.toDateString()}</p>
+                </div>
+              </div>
+            </aside>
 
-                  <div>
-                    <label className="checkbox text-amber-800">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={attendanceData[index]?.status === 'Absent with apology'}
-                        onChange={() => handleStatusChange(student._id, 'Absent with apology')}
-                      />
-                      Absent with apology
-                    </label>
-                  </div>
-                
-                {/*{index !== students.length - 1 && <hr />}*/}
-              </React.Fragment>
-            ))}
+            <section className="lg:col-span-2">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead className="bg-gray-50 border-b border-gray-100">
+                      <tr>
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-600">Student Name</th>
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-600">Grade</th>
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-600 text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {loading ? (
+                        <tr>
+                          <td colSpan="3" className="px-6 py-10 text-center">
+                            <div className="flex justify-center items-center gap-2 text-gray-400">
+                              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Loading students...
+                            </div>
+                          </td>
+                        </tr>
+                      ) : students.length === 0 ? (
+                        <tr>
+                          <td colSpan="3" className="px-6 py-10 text-center text-gray-500">
+                            No students found.
+                          </td>
+                        </tr>
+                      ) : (
+                        students.map((student) => (
+                          <tr key={student._id} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-6 py-4 font-medium text-gray-800">{student.name}</td>
+                            <td className="px-6 py-4">
+                              <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full uppercase font-bold tracking-wider">
+                                {student.grade}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <div className="flex justify-center gap-2">
+                                {['Present', 'Absent', 'Leave'].map((status) => (
+                                  <button
+                                    key={status}
+                                    onClick={() => handleStatusChange(student._id, status)}
+                                    className={`px-3 py-1 text-sm rounded-lg transition-all duration-200 border ${attendanceData[student._id] === status
+                                      ? status === 'Present'
+                                        ? 'bg-green-100 border-green-500 text-green-700 font-bold'
+                                        : status === 'Absent'
+                                          ? 'bg-red-100 border-red-500 text-red-700 font-bold'
+                                          : 'bg-amber-100 border-amber-500 text-amber-700 font-bold'
+                                      : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'
+                                      }`}
+                                  >
+                                    {status}
+                                  </button>
+                                ))}
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
           </div>
-          <button className="bg-amber-400 font-semibold" onClick={handleSubmit}>Submit</button>
         </div>
-      </div>
+      </main>
     </section>
   );
 };

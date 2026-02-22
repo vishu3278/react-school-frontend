@@ -1,4 +1,3 @@
-// AdminDashboard.js
 import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './Sidebar';
 import EventCalendar from './EventCalendar';
@@ -6,13 +5,25 @@ import Announcement from './Announcement';
 import Performance from './Performance';
 import Quiz from '../../components/Quiz';
 import StatCard from '../../components/StatCard';
-import { fetchEvents, fetchAnnouncements, fetchPerformance } from '../../services/api';
+import {
+  fetchEvents,
+  fetchAnnouncements,
+  fetchPerformance,
+  fetchStudents,
+  fetchTeachers,
+  fetchClasses
+} from '../../services/api';
 import '../../styles/Dashboard.css';
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [studentPerformance, setStudentPerformance] = useState([]);
+  const [stats, setStats] = useState({
+    students: 0,
+    teachers: 0,
+    classes: 0
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,15 +32,30 @@ const AdminDashboard = () => {
       setLoading(true);
       setError(null);
 
-      const [eventsData, announcementsData, performanceData] = await Promise.all([
+      const [
+        eventsData,
+        announcementsData,
+        performanceData,
+        studentsData,
+        teachersData,
+        classesData
+      ] = await Promise.all([
         fetchEvents(),
         fetchAnnouncements(),
         fetchPerformance(),
+        fetchStudents(),
+        fetchTeachers(),
+        fetchClasses(),
       ]);
 
       setEvents(eventsData);
       setAnnouncements(announcementsData);
       setStudentPerformance(performanceData);
+      setStats({
+        students: studentsData.length,
+        teachers: teachersData.length,
+        classes: classesData.length
+      });
     } catch (err) {
       console.error('Error loading dashboard data:', err);
       setError('Failed to load dashboard data. Please try again later.');
@@ -73,7 +99,7 @@ const AdminDashboard = () => {
       <Sidebar />
 
       <main className="main p-6">
-        <div className="max-w-7xl mx-auto space-y-8">
+        <div className="max-w-8xl mx-auto space-y-8">
           <Quiz />
 
           <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -82,9 +108,9 @@ const AdminDashboard = () => {
               Overview
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard title="Total Students" value="500" />
-              <StatCard title="Total Teachers" value="10" />
-              <StatCard title="Total Classes" value="8" />
+              <StatCard title="Total Students" value={stats.students.toString()} />
+              <StatCard title="Total Teachers" value={stats.teachers.toString()} />
+              <StatCard title="Total Classes" value={stats.classes.toString()} />
             </div>
           </section>
 
