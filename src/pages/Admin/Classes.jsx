@@ -9,7 +9,6 @@ const Classes = () => {
   const [newClassName, setNewClassName] = useState('');
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [classSubject, setClassSubject] = useState([])
 
   useEffect(() => {
     fetchClasses();
@@ -44,17 +43,35 @@ const Classes = () => {
 
   const handleAddClass = async (e) => {
     e.preventDefault();
-    if (newClassName.trim() !== '') {
+    const trimmedName = newClassName.trim();
+
+    if (!trimmedName) {
+      return;
+    }
+
+    const exists = Array.isArray(classes)
+      && classes.some((cls) => String(cls.grade).toLowerCase() === trimmedName.toLowerCase());
+
+    if (exists) {
+      toast.error('Class already exists');
+      return;
+    }
+
+    if (trimmedName !== '') {
       try {
-        const response = await axios.post('http://localhost:4000/api/v1/class', { grade: newClassName });
-        // console.log('Response data:', response.data); // Log the response data
-        setClasses(prevClasses => {
+        const response = await axios.post('http://localhost:4000/api/v1/class', { grade: trimmedName });
+        const createdClass = {
+          grade: trimmedName,
+          subjects: [],
+        };
+
+        setClasses((prevClasses) => {
           if (Array.isArray(prevClasses)) {
-            return [...prevClasses, response.data]; // Use callback function to update state
-          } else {
-            console.error('Error adding class: Invalid state for classes:', prevClasses);
-            return []; // Reset classes state to an empty array
+            return [...prevClasses, createdClass];
           }
+
+          console.error('Error adding class: Invalid state for classes:', prevClasses);
+          return [createdClass];
         });
         setNewClassName('');
       } catch (error) {
@@ -63,10 +80,10 @@ const Classes = () => {
     }
   };
 
-  const handleClassSubject = (event, className) => {
+  const handleClassSubject = (event, classItem) => {
     // console.log(event.target.checked, className.grade, event.target.value)
     // const cs = {[className.grade]: subject.name}
-    const {value, checked} = event.target
+    const { value, checked } = event.target;
     /*if (checked) {
       setClassSubject(prev => [...prev, value])
     } else {
@@ -74,36 +91,31 @@ const Classes = () => {
     }*/
     
     // return
-    if (checked) {
-      console.info("plus")
-      let updatedData = classes.map(cls => {
-        if (cls.grade == className.grade) {
-          return {...cls, subjects: [...cls.subjects, value]}
-        } 
-        return cls
-      })
-      setClasses(updatedData)
-      setClassSubject(prev => [...prev, value])
-    } else {
-      console.info("minus")
-      let updatedData = classes.map(cls => {
-        if (cls.grade == className.grade) {
-          return { ...cls, subjects: cls.subjects.filter(c => c !== value)}
-        } 
-        return cls
-      })
-      setClasses(updatedData)
-      setClassSubject(prev => prev.filter(item => item !== value))
-    }
-     
-  }
+    const updatedData = classes.map((cls) => {
+      if (cls.grade === classItem.grade) {
+        const current = Array.isArray(cls.subjects) ? cls.subjects : [];
 
-  const handleUpdateClass = async (className) => {
-    // e.preventDefault()
-    console.log(className, classSubject)
-    if (className) {
+        if (checked) {
+          const next = current.includes(value) ? current : [...current, value];
+          return { ...cls, subjects: next };
+        } else {
+          const next = current.filter((c) => c !== value);
+          return { ...cls, subjects: next };
+        }
+      }
+      return cls;
+    });
+
+    setClasses(updatedData);
+  };
+
+  const handleUpdateClass = async (classItem) => {
+    if (classItem?.grade) {
       try {
-        const response = await axios.put("http://localhost:4000/api/v1/class/update", {grade: className, subjects: classSubject})
+        const response = await axios.put("http://localhost:4000/api/v1/class/update", {
+          grade: classItem.grade,
+          subjects: Array.isArray(classItem.subjects) ? classItem.subjects : [],
+        });
         console.log(response.data)
         if (response.data.success) {
           toast.success(response.data.message);
@@ -112,12 +124,12 @@ const Classes = () => {
         }
       } catch (error) {
         console.error('Error updating class:', error);
-        toast.error('Error sending announcement');
+        toast.error('Error updating class');
       }
     } else {
-      console.error("classname is required")
+      console.error('classname is required');
     }
-  }
+  };
 
   return (
     <section className="bg-sky-200 rounded shadow m-2">
@@ -149,25 +161,34 @@ const Classes = () => {
             <thead>
               <tr>
                 <th className="border border-sky-300">Class</th>
-                <th className="border border-sky-300" colSpan={subjects.length}>Subjects</th>
+                <th className="border border-sky-300" colSpan={Math.max(subjects.length || 0, 1)}>Subjects</th>
                 <th className="border border-sky-300">Action</th>
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(classes) && classes.map((classItem, index) => (
-                <tr key={index}>
+              {Array.isArray(classes) && classes.map((classItem) => (
+                <tr key={classItem._id ?? classItem.grade}>
                   <td className="border border-sky-300 font-medium">{classItem.grade}</td>
-                  {Array.isArray(subjects) && subjects.map((item, ind) => (
-                    <td className="border border-sky-300" key={item._id+ind}><label className="checkbox"><input type="checkbox" value={item._id} checked={classItem.subjects?.includes(item._id)} onChange={(event) => handleClassSubject(event, classItem)} /> {item.name}</label></td>
+                  {Array.isArray(subjects) && subjects.map((item) => (
+                    <td className="border border-sky-300" key={item._id}>
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          value={item._id}
+                          checked={Array.isArray(classItem.subjects) ? classItem.subjects.includes(item._id) : false}
+                          onChange={(event) => handleClassSubject(event, classItem)}
+                        />{' '}
+                        {item.name}
+                      </label>
+                    </td>
                   ))}
                     <td className="border border-sky-300">
-                      <button className="bg-sky-300" onClick={() => handleUpdateClass(classItem.grade)}>Update</button>
+                      <button className="bg-sky-300" onClick={() => handleUpdateClass(classItem)}>Update</button>
                     </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {classSubject}
         </div>
       </div>
       <ToastContainer />
