@@ -132,8 +132,12 @@ const Teachers = () => {
   if (loading) return <div className="p-8 text-center text-green-600 animate-pulse">Loading Teachers...</div>;
 
   return (
-    <section className="bg-gray-50 min-h-screen p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <section className="flex bg-green-50 min-h-screen ">
+      <aside className="w-64 hidden md:block">
+        <Sidebar />
+      </aside>
+      <div className="w-full  p-4">
+      <div className=" space-y-8">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h2 className="text-3xl font-bold text-gray-800 flex items-center">
@@ -346,6 +350,7 @@ const Teachers = () => {
             </table>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

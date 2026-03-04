@@ -124,8 +124,12 @@ const Students = () => {
   if (loading) return <div className="p-8 text-center text-blue-600 animate-pulse">Loading Students...</div>;
 
   return (
-    <section className="bg-gray-50 min-h-screen p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <section className="flex bg-pink-50 min-h-screen">
+      <aside className="w-64 hidden md:block">
+        <Sidebar />
+      </aside>
+      <div className="w-full max-w-8xl p-4">
+      <div className="p-4 space-y-8">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h2 className="text-3xl font-bold text-gray-800 flex items-center">
@@ -373,8 +377,8 @@ const Students = () => {
                         </td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex gap-2 justify-center">
-                            <button onClick={() => handleEdit(student)} className="text-blue-500 hover:text-blue-700 transition-colors text-lg" title="Edit">✏️</button>
-                            <button className="text-gray-300 hover:text-red-500 transition-colors text-lg" title="Delete">🗑️</button>
+                            <button onClick={() => handleEdit(student)} className="bg-yellow-100 hover:bg-yellow-200 transition-colors " title="Edit">✏️</button>
+                            <button className="bg-red-100 hover:bg-red-200 transition-colors " title="Delete">🗑️</button>
                           </div>
                         </td>
                       </>
@@ -392,6 +396,7 @@ const Students = () => {
             </table>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

@@ -79,11 +79,15 @@ const Subjects = () => {
   if (loading) return <div className="p-8 text-center text-sky-600 animate-pulse">Loading Subjects...</div>;
 
   return (
-    <section className="bg-gray-50 min-h-screen p-4 md:p-8">
-      <div className="max-w-5xl mx-auto space-y-8">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h2 className="text-3xl font-bold text-gray-800 flex items-center">
+    <section className="flex bg-gray-100 min-h-[calc(100vh-4rem)]">
+      <aside className="w-64 hidden md:block">
+        <Sidebar />
+      </aside>
+
+      <div className="w-full max-w-8xl p-4">
+        {/* <h2 className="box-title bg-gradient-to-r from-gray-200 to-gray-100">Subjects</h2> */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 ">
+          <h2 className="text-2xl font-bold text-gray-800 flex items-center">
             <span className="w-2 h-10 bg-sky-500 rounded-full mr-4"></span>
             Subject Management
           </h2>
@@ -91,6 +95,8 @@ const Subjects = () => {
             <span className="text-sm font-semibold text-gray-500 px-2">Total Subjects: {subjects.length}</span>
           </div>
         </div>
+      <div className="mt-6 space-y-8">
+        {/* Header Section */}
 
         {/* Add Subject Form */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -133,7 +139,7 @@ const Subjects = () => {
               <thead className="bg-gray-50 text-gray-600 text-sm uppercase font-semibold">
                 <tr>
                   <th className="px-6 py-4 cursor-pointer hover:text-sky-600 transition-colors" onClick={() => handleSort('name')}>
-                    Subject Name {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                    Subject Name {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '⬆️' : '⬇️') : ''}
                   </th>
                   <th className="px-6 py-4 text-center">Actions</th>
                 </tr>
@@ -143,8 +149,9 @@ const Subjects = () => {
                   filteredAndSortedSubjects.map((subject, index) => (
                     <tr key={subject._id || index} className="hover:bg-gray-50 transition-colors group">
                       <td className="px-6 py-4 font-medium text-gray-800">{subject.name}</td>
-                      <td className="px-6 py-4 text-center">
-                        <button className="text-gray-300 hover:text-red-500 transition-colors">🗑️</button>
+                      <td className="px-6 py-4 text-right">
+                        <button className="bg-orange-100 hover:bg-orange-200 transition-colors">✏️</button>
+                        <button className="bg-red-100 hover:bg-red-200 transition-colors">🗑️</button>
                       </td>
                     </tr>
                   ))
@@ -159,6 +166,7 @@ const Subjects = () => {
             </table>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

@@ -132,11 +132,17 @@ const Classes = () => {
   };
 
   return (
-    <section className="bg-sky-200 rounded shadow m-2">
-      {/*<Sidebar />*/}
+    <section className="flex bg-sky-100 min-h-[calc(100vh-4rem)]">
+      <aside className="w-64 hidden md:block">
+        <Sidebar />
+      </aside>
+
+      <div className="w-full max-w-8xl p-4">
+        <h2 className="box-title bg-gradient-to-r from-sky-200 to-sky-100">Classes</h2>
+      
       <div className="grow shrink">
-        <h2 className="box-title bg-sky-300">Classes</h2>
-        <div className="p-4">
+        
+        
           <form className="mb-4" onSubmit={handleAddClass}>
             <input
               type="text"
@@ -189,10 +195,10 @@ const Classes = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        
       </div>
       <ToastContainer />
-
+</div>
     </section>
   );
 };

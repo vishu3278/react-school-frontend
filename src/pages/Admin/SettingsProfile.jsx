@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import axios from 'axios';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -120,7 +121,7 @@ const SettingsProfile = () => {
 
       {/* Main content */}
       <div className="flex-1 p-4 flex justify-center">
-        <div className="w-full max-w-3xl bg-white rounded shadow-md p-6">
+        <div className="w-full max-w-8xl bg-white rounded shadow-md p-6">
           <div className="flex items-center gap-4 mb-4 border-b pb-4">
             <div className="w-16 h-16 rounded-full bg-sky-200 flex items-center justify-center overflow-hidden">
               {profilePic && profilePic !== '-' ? (
