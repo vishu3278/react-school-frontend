@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './Sidebar';
 import EventCalendar from './EventCalendar';
-import Announcement from './Announcement';
+// import Announcement from './Announcement';
 import Performance from './Performance';
 import Quiz from '../../components/Quiz';
 import StatCard from '../../components/StatCard';
@@ -14,10 +14,12 @@ import {
   fetchClasses
 } from '../../services/api';
 import '../../styles/Dashboard.css';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const [studentPerformance, setStudentPerformance] = useState([]);
   const [stats, setStats] = useState({
     students: 0,
@@ -68,6 +70,24 @@ const AdminDashboard = () => {
     loadDashboardData();
   }, [loadDashboardData]);
 
+  useEffect(() => {
+    if (!announcements || announcements.length === 0) return;
+    const id = setInterval(() => {
+      setCarouselIndex((prev) => (prev + 1) % announcements.length);
+    }, 6000);
+    return () => clearInterval(id);
+  }, [announcements]);
+
+  const prevAnnouncement = () => {
+    if (!announcements || announcements.length === 0) return;
+    setCarouselIndex((prev) => (prev - 1 + announcements.length) % announcements.length);
+  };
+
+  const nextAnnouncement = () => {
+    if (!announcements || announcements.length === 0) return;
+    setCarouselIndex((prev) => (prev + 1) % announcements.length);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -102,24 +122,58 @@ const AdminDashboard = () => {
         <div className="max-w-8xl mx-auto space-y-8">
           <Quiz />
 
-          <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="w-2 h-8 bg-blue-600 rounded-full mr-3"></span>
-              Overview
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard title="Total Students" value={stats.students.toString()} />
-              <StatCard title="Total Teachers" value={stats.teachers.toString()} />
-              <StatCard title="Total Classes" value={stats.classes.toString()} />
-            </div>
-          </section>
+          {announcements.length > 0 && (
+            <section className="bg-gradient-to-r from-teal-50 to-teal-100 p-3 rounded-xl shadow-sm border border-teal-200">
+              <div className="flex items-center gap-3">
+                <span className="w-2 h-6 bg-teal-600 rounded-full"></span>
+                <h3 className="text-teal-800 font-semibold">Announcements</h3>
+                <div className="ml-auto flex items-center gap-2">
+                  <Link to="/admin/communication" className="px-2 py-1 rounded border border-teal-300 text-teal-700 hover:bg-teal-200">
+                    Manage Announcements
+                  </Link>
+                  <button
+                    onClick={prevAnnouncement}
+                    className="px-2 py-1 rounded border border-blue-200 text-blue-700 hover:bg-blue-300"
+                  >
+                    ◀
+                  </button>
+                  <button
+                    onClick={nextAnnouncement}
+                    className="px-2 py-1 rounded border border-blue-200 text-blue-700 hover:bg-blue-300"
+                  >
+                    ▶
+                  </button>
+                </div>
+              </div>
+              <div className="mt-2 overflow-hidden">
+                <div className="transition-opacity duration-500">
+                  <p className="text-gray-800 font-medium">
+                    📢 {announcements[carouselIndex]?.announcement}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-2 text-xs text-blue-700">{carouselIndex + 1} / {announcements.length}</div>
+            </section>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Performance studentPerformance={studentPerformance} />
-            <EventCalendar events={events} />
-          </div>
+            <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="w-2 h-8 bg-blue-600 rounded-full mr-3"></span>
+                Overview
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <StatCard title="Total Students" value={stats.students.toString()} />
+                <StatCard title="Total Staff" value={stats.teachers.toString()} />
+                <StatCard title="Total Classes" value={stats.classes.toString()} />
+              </div>
+            </section>
 
-          <Announcement announcements={announcements} />
+            <Performance studentPerformance={studentPerformance} />
+          </div>
+            <EventCalendar events={events} />
+
+          {/* <Announcement announcements={announcements} /> */}
         </div>
       </main>
 
